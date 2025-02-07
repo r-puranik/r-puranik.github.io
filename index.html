@@ -10,7 +10,7 @@
         body {
             margin: 0;
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #1f1c2c, #928dab);
+            background: linear-gradient(135deg, #1f1c2c, #1105f0);
             color: white;
             text-align: center;
             overflow-x: hidden;
@@ -53,12 +53,34 @@
             background: rgba(255, 255, 255, 0.2);
             padding: 10px;
             border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            overflow: hidden;
         }
         canvas {
             display: block;
             margin: 10px auto;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             border-radius: 5px;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .about-container {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .about-container img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .about-container p {
+            margin-top: 20px;
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -69,33 +91,65 @@
         <h2>Projects</h2>
         <a href="#" onclick="loadPDF()">AWS Cloud Security - IAM</a>
         <a href="https://github.com/your-username/project2">Project 2</a>
+        
+        <h2>About Me</h2>
+        <a href="#" onclick="toggleAboutMe()">Click to Know More About Me</a>
     </div>
+
+    <!-- About Me Section -->
+    <div class="about-container" id="about-container">
+        <img src="https://via.placeholder.com/200" alt="Rishi Puranik">
+        <p>Hi! I'm Rishi Puranik, a software engineer with a passion for building scalable solutions. I specialize in AI/ML, Cloud technologies, and Cybersecurity. I enjoy solving complex problems and building impactful projects. Outside of work, I love traveling, snowboarding, and playing the trumpet!</p>
+    </div>
+
     <div class="pdf-container" id="pdf-container"></div>
+
     <script>
         function loadPDF() {
-            const url = 'pdfs/Cloud-Security-with-AWS-IAM.pdf'; // Update with actual PDF path
+            const url = 'pdfs/aws-cloud-security-iam.pdf'; // Update with actual PDF path
             const container = document.getElementById('pdf-container');
-            container.innerHTML = '';
+            container.innerHTML = ''; // Clear previous content
             
-            pdfjsLib.getDocument(url).promise.then(pdf => {
-                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                    pdf.getPage(pageNum).then(page => {
-                        const canvas = document.createElement('canvas');
-                        container.appendChild(canvas);
-                        const context = canvas.getContext('2d');
-                        const viewport = page.getViewport({ scale: 1.5 });
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        
-                        page.render({ canvasContext: context, viewport: viewport });
-                        canvas.style.opacity = 0;
-                        setTimeout(() => {
-                            canvas.style.transition = 'opacity 0.5s ease-in-out';
-                            canvas.style.opacity = 1;
-                        }, pageNum * 300);
-                    });
-                }
-            });
+            if (typeof pdfjsLib === 'undefined') {
+                console.error('pdf.js is not loaded');
+                return;
+            }
+
+            pdfjsLib.getDocument(url).promise
+                .then(pdf => {
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        pdf.getPage(pageNum).then(page => {
+                            const canvas = document.createElement('canvas');
+                            container.appendChild(canvas);
+                            const context = canvas.getContext('2d');
+                            const viewport = page.getViewport({ scale: 1.5 });
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+
+                            page.render({ canvasContext: context, viewport: viewport });
+
+                            canvas.style.opacity = 0;
+                            setTimeout(() => {
+                                canvas.style.transition = 'opacity 0.5s ease-in-out';
+                                canvas.style.opacity = 1;
+                            }, pageNum * 300);
+                        }).catch(err => {
+                            console.error(`Error rendering page ${pageNum}:`, err);
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error('Error loading PDF:', err);
+                });
+        }
+
+        function toggleAboutMe() {
+            const aboutContainer = document.getElementById('about-container');
+            if (aboutContainer.style.display === 'none' || aboutContainer.style.display === '') {
+                aboutContainer.style.display = 'block';
+            } else {
+                aboutContainer.style.display = 'none';
+            }
         }
     </script>
 </body>
