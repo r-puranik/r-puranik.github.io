@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rishi Puranik - Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -45,6 +46,20 @@
             background: white;
             color: #1f1c2c;
         }
+        .pdf-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        canvas {
+            display: block;
+            margin: 10px auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -52,8 +67,36 @@
     <div class="container">
         <p>I am <b>Rishi Puranik</b>, a software engineer passionate about AI/ML, Cloud, and Cybersecurity.</p>
         <h2>Projects</h2>
-        <a href="https://github.com/your-username/project1">Project 1</a>
+        <a href="#" onclick="loadPDF()">AWS Cloud Security - IAM</a>
         <a href="https://github.com/your-username/project2">Project 2</a>
     </div>
+    <div class="pdf-container" id="pdf-container"></div>
+    <script>
+        function loadPDF() {
+            const url = 'pdfs/aws-cloud-security-iam.pdf'; // Update with actual PDF path
+            const container = document.getElementById('pdf-container');
+            container.innerHTML = '';
+            
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    pdf.getPage(pageNum).then(page => {
+                        const canvas = document.createElement('canvas');
+                        container.appendChild(canvas);
+                        const context = canvas.getContext('2d');
+                        const viewport = page.getViewport({ scale: 1.5 });
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        
+                        page.render({ canvasContext: context, viewport: viewport });
+                        canvas.style.opacity = 0;
+                        setTimeout(() => {
+                            canvas.style.transition = 'opacity 0.5s ease-in-out';
+                            canvas.style.opacity = 1;
+                        }, pageNum * 300);
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 </html>
