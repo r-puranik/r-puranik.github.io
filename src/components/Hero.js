@@ -10,9 +10,42 @@ const Hero = () => (
     >
       <h1>Rishi Puranik</h1>
       <Subtitle>Software Engineer specializing in AI/ML & Cybersecurity</Subtitle>
+      {/* <JumpTo>
+        <NavLink href = "#projects">Projects</NavLink>
+        <NavLink href = "#experience">Experience</NavLink>
+        <NavLink href = "#education">Education</NavLink>
+        <NavLink href = "#contact">Contact</NavLink>
+      </JumpTo> */}
     </motion.div>
   </HeroContainer>
 );
+
+const JumpTo = styled.div`
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @media (max-width: 768pix) {
+        gap: 1rem;
+    }
+`;
+
+const NavLink = styled.a`
+  color: ${({ theme }) => theme.accent};
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 2px solid ${({ theme }) => theme.accent}50;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.accent}15;
+    transform: translateY(-2px);
+  }
+`;
 
 const HeroContainer = styled.section`
   min-height: 100vh;
