@@ -1,24 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from './theme';
+import { GlobalStyles } from './GlobalStyles';
+import { AnimatedSection } from './components/AnimatedSection';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Projects from './components/Projects';
+import About from './components/About';
+import Contact from './components/Contact';
 
 function App() {
+  const [theme, setTheme] = useState('light');
+  const toggleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+      <GlobalStyles />
+      <Navbar toggleTheme={toggleTheme} theme={theme} />
+      
+      <main>
+        <AnimatedSection>
+          <Hero />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Projects />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <About />
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <Contact />
+        </AnimatedSection>
+      </main>
+    </ThemeProvider>
   );
 }
 
